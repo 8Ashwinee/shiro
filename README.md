@@ -219,7 +219,7 @@ templates/        blank memory files, the resume and cover-letter templates
 
 ## Contributing
 
-Issues and pull requests are welcome, especially new reviewer personas, better resume templates and support for more application forms. Please keep personal details out of agents, skills and templates: they're shared with everyone who uses Shiro.
+Issues and pull requests are welcome, especially new reviewer personas, better resume templates and support for more application forms. Start with [CONTRIBUTING.md](CONTRIBUTING.md), and use the [issue templates](https://github.com/priyansh1210/shiro/issues/new/choose) to report a bug or suggest a reviewer. Please keep personal details out of agents, skills and templates: they're shared with everyone who uses Shiro.
 
 ## License
 

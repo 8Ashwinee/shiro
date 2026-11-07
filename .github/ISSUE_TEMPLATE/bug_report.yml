@@ -1,0 +1,52 @@
+name: Bug report
+description: Something in Shiro doesn't work as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **Please don't paste your resume, memory files or any personal details** (name, email, phone, employer). Replace them with placeholders like `Jane Doe` or `Acme`.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where did it happen?
+      options:
+        - Review (/review or the Review tab)
+        - Apply (/apply or the Apply tab)
+        - Memory (/setup, /remember or the Memory tab)
+        - Resume HTML / PDF
+        - The app in general (npm run ui)
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      placeholder: The review finished but resume.pdf was two pages, even though…
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. npm run ui
+        2. Review tab → paste a job description → Start review
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error messages or logs
+      description: From the terminal running `npm run ui`, or the Claude box in the app. Remove personal details first.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Versions
+      description: Shiro version (shown in ui/server.mjs as VERSION), `claude --version`, `node --version`, and your OS.
+      placeholder: Shiro 0.9.0 · Claude Code 2.x · Node 22 · Windows 11
+    validations:
+      required: true

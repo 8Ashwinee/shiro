@@ -1,0 +1,33 @@
+name: Feature request
+description: An idea to make Shiro more useful.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      placeholder: When I apply to many jobs a week, I can't see which ones I already…
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like Shiro to do?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you've tried instead?
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Shiro's ground rules
+      description: Features have to keep these.
+      options:
+        - label: It never invents or inflates facts about the candidate.
+          required: true
+        - label: It never submits an application, creates accounts or types passwords for the user.
+          required: true
+        - label: Personal data stays on the user's computer.
+          required: true

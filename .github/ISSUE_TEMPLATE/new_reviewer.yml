@@ -1,0 +1,28 @@
+name: New reviewer idea
+description: Suggest a new persona for the review panel.
+labels: [reviewer, enhancement]
+body:
+  - type: input
+    id: who
+    attributes:
+      label: Who is the reviewer?
+      placeholder: e.g. Design lead, Bar raiser, Startup founder, Academic hiring committee
+    validations:
+      required: true
+  - type: textarea
+    id: reject
+    attributes:
+      label: How do they reject a resume?
+      description: What do they look for in the first minute, and what makes them say no?
+    validations:
+      required: true
+  - type: textarea
+    id: jobs
+    attributes:
+      label: Which kinds of jobs need this reviewer?
+  - type: checkboxes
+    id: pr
+    attributes:
+      label: Contributing
+      options:
+        - label: I'd like to write this reviewer myself (see CONTRIBUTING.md → "Adding a reviewer").
