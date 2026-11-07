@@ -2,6 +2,9 @@
 /memory/
 /runs/
 
+# Launch-video work files from /brag (copy the final video into docs/ on purpose if you want it in the repo)
+/brag-output*/
+
 # Local Claude Code settings
 .claude/settings.local.json
 

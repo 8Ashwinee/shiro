@@ -16,9 +16,9 @@ A job-application workspace for [Claude Code](https://claude.com/claude-code). I
 
 <br>
 
-<img src="docs/review-panel.jpg" alt="The Shiro app: ten reviewer characters have stamped REJECT, MAYBE and ADVANCE verdicts on a resume" width="920">
+<img src="docs/shiro-demo.gif" alt="Shiro in 20 seconds: ten reviewer characters stamp REJECT, MAYBE and ADVANCE on a resume, Gavvy writes the fix plan, and Quill rewrites it into a one-page resume" width="920">
 
-<sub>The review panel in the free demo mode: every reviewer has stamped a verdict.</sub>
+<sub>Ten reviewers judge the resume, Gavvy ranks the fixes, Quill rewrites it. Made-up demo data.</sub>
 
 </div>
 
