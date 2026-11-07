@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cover letter</title>
+<!--
+  Printable cover letter. /apply fills it and turns it into a PDF with tools/html-to-pdf.mjs.
+  You can also open it in Chrome → Ctrl+P → Save as PDF.
+
+  Markup that replaces the LETTER_CONTENT marker below:
+
+  <header>
+    <h1>Full Name</h1>
+    <p class="contact">City, Country · email@example.com · +1 555 555 5555 · linkedin.com/in/name</p>
+  </header>
+  <p class="date">5 November 2026</p>
+  <p class="to">Hiring Team<br>Company Name</p>
+  <p>Dear Hiring Team,</p>
+  <p>Paragraph…</p>
+  <p class="sign">Sincerely,<br>Full Name</p>
+-->
+<style>
+  @page { margin: 0.8in 0.9in; }
+  * { box-sizing: border-box; }
+  html, body { background: #fff; color: #111; }
+  body { margin: 0; font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; font-size: 11pt; line-height: 1.45; }
+  main { max-width: 8.5in; margin: 0 auto; padding: 0.8in 0.9in; }
+  @media print { main { max-width: none; padding: 0; } }
+  header { border-bottom: 1px solid #111; padding-bottom: 6pt; margin-bottom: 18pt; }
+  h1 { font-size: 18pt; margin: 0 0 2pt; letter-spacing: 0.4pt; }
+  .contact { margin: 0; font-size: 9.5pt; }
+  a { color: inherit; text-decoration: none; }
+  p { margin: 0 0 10pt; }
+  .date { margin-bottom: 14pt; }
+  .sign { margin-top: 18pt; }
+</style>
+</head>
+<body>
+<main>
+<!-- LETTER_CONTENT -->
+</main>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Personal data: never commit
+/memory/
+/runs/
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="shiro-token" content="__SHIRO_TOKEN__">
+<title>Shiro</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='6' width='26' height='21' rx='6' fill='%23D97757'/%3E%3Crect x='10' y='12' width='3.5' height='6' rx='1.7' fill='%23221C18'/%3E%3Crect x='18.5' y='12' width='3.5' height='6' rx='1.7' fill='%23221C18'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-critter" id="brandCritter"></span><span>Shiro</span></div>
+
+  <nav class="tabs" role="tablist" aria-label="Parts">
+    <button role="tab" id="tab-review" data-tab="review" aria-selected="true" aria-controls="view-review">Review</button>
+    <button role="tab" id="tab-apply" data-tab="apply" aria-selected="false" aria-controls="view-apply">Apply</button>
+    <button role="tab" id="tab-memory" data-tab="memory" aria-selected="false" aria-controls="view-memory">Memory</button>
+  </nav>
+
+  <div class="top-right">
+    <div class="run-settings">
+      <span class="rs-for" id="rsFor">Review uses</span>
+      <select class="model-pick" id="modelSelect" aria-label="Model for this tab">
+        <option value="opus">Opus 5.5</option>
+        <option value="sonnet">Sonnet 5.5</option>
+        <option value="haiku">Haiku 5.5</option>
+        <option value="fable">Fable 5.1 (Max plan)</option>
+        <option value="default">My Claude Code default</option>
+      </select>
+      <div class="effort" role="radiogroup" aria-label="Thinking effort for this tab">
+        <span class="effort-label">Effort</span>
+        <button role="radio" data-effort="low">Low</button>
+        <button role="radio" data-effort="medium">Med</button>
+        <button role="radio" data-effort="high">High</button>
+        <button role="radio" data-effort="xhigh">XHigh</button>
+        <button role="radio" data-effort="max">Max</button>
+      </div>
+      <span class="effort-hint" id="effortHint"></span>
+    </div>
+    <button type="button" class="usage" id="usage" title="Your Claude plan usage, the same numbers as /usage. Click to refresh (free).">
+      <span class="meter" id="mSession"><span>Session</span><i><b></b></i><em>—</em></span>
+      <span class="meter" id="mWeek"><span>Week</span><i><b></b></i><em>—</em></span>
+    </button>
+  </div>
+</header>
+<div class="banner" id="versionBanner" hidden>
+  <b>Shiro was updated, but the old app server is still running.</b>
+  In the terminal where you ran <code>npm run ui</code>, press <kbd>Ctrl</kbd>+<kbd>C</kbd>, run <code>npm run ui</code> again, then reload this page.
+</div>
+
+<main>
+  <!-- ============ REVIEW ============ -->
+  <section class="view active" id="view-review" role="tabpanel" aria-labelledby="tab-review">
+    <aside class="controls">
+      <h1>Review a resume</h1>
+      <p class="lede">Ten reviewers try to reject your resume for one job. Then the writer fixes it with true facts only.</p>
+
+      <div class="seg" role="group" aria-label="Job description input">
+        <button type="button" data-jd="paste" class="on">Paste JD</button>
+        <button type="button" data-jd="link">Job link</button>
+      </div>
+      <textarea id="jdText" rows="7" placeholder="Paste the job description here…"></textarea>
+      <input id="jdUrl" type="url" placeholder="https://company.com/careers/…" hidden>
+
+      <label class="field"><span>Start from</span><select id="reviewResume"></select></label>
+
+      <div class="actions">
+        <button class="btn primary" id="startReview" type="button">Start review</button>
+        <button class="btn ghost" id="demoReview" type="button">Play demo <small>free</small></button>
+      </div>
+      <button class="btn danger" id="stopReview" type="button" hidden>Stop</button>
+
+      <details class="team" id="teamPanel">
+        <summary>Team <span class="team-count" id="teamCount"></span></summary>
+        <p class="note">Switch agents on or off and choose each one’s model and effort. Sonnet and lower effort use less of your limit.</p>
+        <ul class="team-list" id="teamList"></ul>
+        <div class="team-actions">
+          <button class="btn small ghost" id="teamReset" type="button" title="Sonnet for the picker and reviewers, Opus for the debrief and writer, recommended efforts">Recommended</button>
+          <button class="btn small ghost" id="teamAllSonnet" type="button">All Sonnet</button>
+          <button class="btn small ghost" id="teamAllOpus" type="button">All Opus</button>
+        </div>
+      </details>
+
+      <div class="convo" id="reviewConvo" hidden></div>
+
+      <details class="past">
+        <summary>Past runs</summary>
+        <ul id="pastRuns"></ul>
+      </details>
+    </aside>
+
+    <div class="stage review-stage" id="reviewStage">
+      <div class="lane lane-top">
+        <div class="slot" id="slot-picker"></div>
+        <div class="card inbox" id="inbox">
+          <div class="doc"><span class="doc-icon jd"></span><div><b>Job description</b><small id="inboxJd">Waiting for a job…</small></div></div>
+          <div class="doc"><span class="doc-icon cv"></span><div><b>Resume</b><small id="inboxResume">Best match</small></div></div>
+        </div>
+      </div>
+
+      <div class="flow" data-flow="panel"></div>
+
+      <div class="zone panel-zone" id="panelZone">
+        <div class="zone-label">The panel <span class="count" id="panelCount"></span></div>
+        <div class="panel-grid" id="panelGrid"></div>
+      </div>
+
+      <div class="flow" data-flow="debrief"></div>
+
+      <div class="lane lane-bottom">
+        <div class="slot" id="slot-debrief"></div>
+        <div class="flow flow-h" data-flow="writer"></div>
+        <div class="slot" id="slot-writer"></div>
+        <div class="flow flow-h" data-flow="output"></div>
+        <div class="card output" id="outputCard">
+          <div class="doc big"><span class="doc-icon cv new"></span><div><b>New resume</b><small id="outputNote">Not written yet</small></div></div>
+          <div class="output-actions" id="outputActions" hidden>
+            <a class="btn small primary" id="openResume" target="_blank" rel="noopener">Open resume</a>
+            <a class="btn small" id="openPdf" target="_blank" rel="noopener" hidden>Open PDF</a>
+            <button class="btn small" type="button" id="makePdf">Make PDF</button>
+            <button class="btn small" type="button" id="round2" title="Run the reviewers again on the new resume to see if the score went up">Round 2</button>
+            <button class="btn small" type="button" data-open="changes.md">What changed</button>
+            <button class="btn small" type="button" data-open="questions.md">Questions</button>
+          </div>
+        </div>
+      </div>
+
+      <ol class="ticker" id="reviewTicker" aria-live="polite"></ol>
+    </div>
+  </section>
+
+  <!-- ============ APPLY ============ -->
+  <section class="view" id="view-apply" role="tabpanel" aria-labelledby="tab-apply" hidden>
+    <aside class="controls">
+      <h1>Fill an application</h1>
+      <p class="lede">Fillo fills the form in Chrome from your memory, then stops. <b>You</b> review and press Submit.</p>
+
+      <label class="field"><span>Application link</span><input id="applyUrl" type="url" placeholder="https://company.com/careers/job/apply"></label>
+      <label class="field"><span>Resume to upload</span><select id="applyResume"></select></label>
+
+      <div class="actions">
+        <button class="btn primary" id="startApply" type="button">Start filling</button>
+        <button class="btn ghost" id="demoApply" type="button">Play demo <small>free</small></button>
+      </div>
+      <button class="btn danger" id="stopApply" type="button" hidden>Stop</button>
+
+      <p class="note">Needs Chrome open with the Claude extension. If a site asks you to log in or solve a CAPTCHA, Fillo waits for you.</p>
+
+      <div class="convo" id="applyConvo" hidden></div>
+    </aside>
+
+    <div class="stage apply-stage">
+      <div class="apply-scene">
+        <div class="slot" id="slot-filler"></div>
+        <div class="browser" id="browser">
+          <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url" id="browserUrl">Waiting for a link…</span></div>
+          <div class="browser-page">
+            <div class="form-title">Application form</div>
+            <ul class="form-rows" id="formRows"></ul>
+            <div class="cursor" id="cursor" aria-hidden="true"></div>
+            <div class="final-stamp" id="applyStamp">Not submitted · your turn</div>
+          </div>
+        </div>
+      </div>
+      <div class="stats">
+        <span id="statFilled">0 fields filled</span>
+        <span id="statUploaded">0 files uploaded</span>
+        <span id="statChrome">Chrome: not checked</span>
+      </div>
+      <ol class="ticker" id="applyTicker" aria-live="polite"></ol>
+    </div>
+  </section>
+
+  <!-- ============ MEMORY ============ -->
+  <section class="view" id="view-memory" role="tabpanel" aria-labelledby="tab-memory" hidden>
+    <aside class="controls">
+      <h1>Career memory</h1>
+      <p class="lede">Everything you’ve done, kept private on this computer. The writer and the form filler use it.</p>
+      <div class="slot memo-slot" id="slot-memo"></div>
+      <div class="seg" role="group" aria-label="Add to or remove from memory">
+        <button type="button" data-memmode="add" class="on">Add</button>
+        <button type="button" data-memmode="forget">Forget</button>
+      </div>
+      <label class="field"><span id="rememberLabel">What’s new?</span>
+        <textarea id="rememberText" rows="4" placeholder="e.g. Finished the AWS Cloud Practitioner certificate in Nov 2026"></textarea>
+      </label>
+      <p class="note" id="forgetNote" hidden>Memo finds it everywhere in memory and removes it. To remove one item instantly and for free, use the bin icon next to it.</p>
+      <div class="actions">
+        <button class="btn primary" id="startRemember" type="button">Remember this</button>
+        <button class="btn ghost" id="demoRemember" type="button">Demo <small>free</small></button>
+      </div>
+      <button class="btn danger" id="stopRemember" type="button" hidden>Stop</button>
+      <div class="convo" id="memoryConvo" hidden></div>
+    </aside>
+
+    <div class="stage memory-stage">
+      <div class="callout" id="setupCallout" hidden>
+        <b>Set up your profile.</b> Add your resume(s) under <b>Resumes</b>, then press <b>Set up my profile</b>.
+        Claude reads them and asks you a few questions in the Claude box on the left; answer there and it carries on.
+        (Running <code>/setup</code> in Claude Code does the same thing.)
+        <div class="callout-actions"><button class="btn small primary" id="startSetup" type="button">Set up my profile</button></div>
+      </div>
+
+      <div class="mem-head">
+        <nav class="subtabs" role="tablist" aria-label="Memory sections">
+          <button type="button" role="tab" data-mem="files" aria-selected="true">Memory <span class="count" id="cntFiles"></span></button>
+          <button type="button" role="tab" data-mem="resumes" aria-selected="false">Resumes <span class="count" id="cntResumes"></span></button>
+          <button type="button" role="tab" data-mem="documents" aria-selected="false">Documents <span class="count" id="cntDocs"></span></button>
+          <button type="button" role="tab" data-mem="links" aria-selected="false">Links <span class="count" id="cntLinks"></span></button>
+        </nav>
+        <label class="search">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4 4"/></svg>
+          <input type="search" id="memSearch" placeholder="Search memory" aria-label="Search memory">
+        </label>
+      </div>
+
+      <div class="filing" id="filingStatus" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <div><b id="filingTitle">Working…</b><small id="filingStep"></small></div>
+        <span class="filing-time" id="filingTime"></span>
+      </div>
+
+      <!-- Memory files: pick a file on the left, its items on the right, each removable. -->
+      <div class="mem-pane" data-pane="files">
+        <div class="mem-browser">
+          <ul class="file-nav" id="fileNav" aria-label="Memory files"></ul>
+          <div class="item-pane">
+            <div class="item-head">
+              <div><h2 id="itemTitle">Profile</h2><small id="itemSub"></small></div>
+              <button class="btn small ghost" id="viewRaw" type="button">View as text</button>
+            </div>
+            <ul class="items" id="itemList"></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mem-pane" data-pane="resumes" hidden>
+        <label class="dropzone compact" id="resumeDrop">
+          <input type="file" id="resumeInput" multiple accept=".pdf,.doc,.docx,.md,.txt,.html,.htm">
+          <b>Drop resumes here, or click to choose</b>
+          <span>One per kind of role works best (e.g. AI Engineer, SDE, Data Science). PDF or Word. Free to add.</span>
+        </label>
+        <ul class="shelf" id="resumeShelf"></ul>
+      </div>
+
+      <div class="mem-pane" data-pane="documents" hidden>
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="docInput" multiple accept=".pdf,.doc,.docx,.odt,.rtf,.txt,.md,.csv,.png,.jpg,.jpeg,.webp,.ppt,.pptx,.xls,.xlsx,.html,.htm">
+          <b>Drop files here, or click to choose</b>
+          <span>Certificates, transcripts, degree, letters, portfolio, samples. PDF, Word, images, HTML or text, up to 20 MB each. Adding files is free.</span>
+          <small>Don’t add ID or bank documents. Shiro never uploads those.</small>
+        </label>
+        <label class="check"><input type="checkbox" id="autoFile" checked> Sort new files into memory automatically <small>Memo identifies each file, renames it clearly and files it, using the Memory tab’s model and effort (top bar).</small></label>
+        <div class="doc-actions" id="docActions" hidden>
+          <span id="docNewCount"></span>
+          <button class="btn small primary" id="fileDocs" type="button">Sort them into memory</button>
+        </div>
+        <div id="docGroups"></div>
+      </div>
+
+      <div class="mem-pane" data-pane="links" hidden>
+        <form class="link-add" id="linkForm">
+          <input type="url" id="linkUrl" placeholder="Paste a link: portfolio, certificate verification, project demo…" aria-label="Link">
+          <input type="text" id="linkNote" placeholder="What is it? (optional)" aria-label="What the link is">
+          <button class="btn small primary" type="submit">Add link</button>
+        </form>
+        <ul class="link-list" id="linkList"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <header>
+    <span class="drawer-critter" id="drawerCritter"></span>
+    <div><h2 id="drawerTitle"></h2><small id="drawerSub"></small></div>
+    <button class="icon-btn" id="drawerClose" type="button" aria-label="Close">×</button>
+  </header>
+  <div class="drawer-body md" id="drawerBody"></div>
+</aside>
+<div class="scrim" id="scrim" hidden></div>
+<div class="toast" id="toast" role="status"><span id="toastText"></span><button type="button" id="toastAction" hidden></button></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

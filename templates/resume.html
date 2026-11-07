@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resume</title>
+<!-- shiro-fit: tools/html-to-pdf.mjs tightens size and spacing a little (never below ~9pt) if the PDF spills onto an extra page. -->
+<meta name="shiro-fit" content="pages">
+<!--
+  Printable, ATS-safe resume.
+  To get a PDF: open this file in Chrome, press Ctrl+P (Cmd+P on Mac), choose "Save as PDF".
+  Print settings: Margins = Default, Headers and footers = OFF.
+
+  Markup the resume writer uses in place of the RESUME_CONTENT marker below:
+
+  <header>
+    <h1>Full Name</h1>
+    <p class="contact">City, Country · email@example.com · +1 555 555 5555 · linkedin.com/in/name · github.com/name</p>
+  </header>
+  <section>
+    <h2>Experience</h2>
+    <div class="entry">
+      <div class="row"><span><strong>Job Title</strong>, Company</span><span>Jan 2025 – Present</span></div>
+      <div class="row meta"><span>City, Country</span></div>
+      <ul>
+        <li>Bullet</li>
+      </ul>
+    </div>
+  </section>
+  <section>
+    <h2>Skills</h2>
+    <p><strong>Languages:</strong> Python, SQL</p>
+  </section>
+-->
+<style>
+  @page { margin: 0.5in 0.55in; }
+  * { box-sizing: border-box; }
+  html, body { background: #fff; color: #111; }
+  body {
+    margin: 0;
+    font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.3;
+  }
+  main { max-width: 8.5in; margin: 0 auto; padding: 0.5in 0.55in; }
+  @media print { main { max-width: none; padding: 0; } }
+  header { text-align: center; margin-bottom: 6pt; }
+  h1 { font-size: 20pt; margin: 0 0 2pt; letter-spacing: 0.5pt; }
+  .contact { margin: 0; font-size: 9.5pt; }
+  a { color: #1155cc; text-decoration: none; }
+  h2 {
+    font-size: 11pt;
+    text-transform: uppercase;
+    letter-spacing: 0.8pt;
+    border-bottom: 1px solid #111;
+    margin: 9pt 0 4pt;
+    padding-bottom: 1pt;
+  }
+  .entry { margin-bottom: 5pt; break-inside: avoid; }
+  .row { display: flex; justify-content: space-between; gap: 12pt; }
+  .meta { font-style: italic; font-size: 9.5pt; }
+  ul { margin: 2pt 0 0; padding-left: 14pt; }
+  li { margin: 0 0 1.5pt; }
+  p { margin: 0 0 2pt; }
+</style>
+</head>
+<body>
+<main>
+<!-- RESUME_CONTENT -->
+</main>
+</body>
+</html>

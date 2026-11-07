@@ -1,0 +1,19 @@
+{
+  "name": "shiro",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "author": "Priyansh Kabra",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/priyansh1210/shiro.git"
+  },
+  "description": "Ten reviewers try to reject your resume, a writer fixes it with true facts, and Claude fills the application in Chrome. Runs on your own Claude subscription through Claude Code.",
+  "type": "module",
+  "scripts": {
+    "ui": "node ui/server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
