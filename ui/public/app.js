@@ -40,7 +40,7 @@ async function api(path, body) {
 }
 
 // Must match VERSION in ui/server.mjs. A mismatch means an old server is still running.
-const APP_VERSION = '0.9.0';
+const APP_VERSION = '0.9.1';
 let appState = { resumes: [], runs: [], memory: false, jobs: [] };
 
 function showOutdated() {
@@ -1068,7 +1068,7 @@ const memory = {
     if (!appState.memory) { toast(`Added ${names.length} resume${names.length === 1 ? '' : 's'}. Press “Set up my profile” when you’ve added them all.`); return; }
     if (!$('#autoFile').checked) { toast('Resume added. Tell Memo about it in “What’s new?” when you’re ready.'); return; }
     this.run(`Adding ${names.length} resume${names.length === 1 ? '' : 's'}…`,
-      `New resume file(s) in memory/resume/: ${names.join(', ')}. Add each under ## Resumes in memory/profile.md with the role it targets (rename it to the role with node tools/file-doc.mjs if its name doesn't say), and save any facts that are newer than memory, following the source-of-truth rule.`);
+      `New resume file(s) in memory/resume/: ${names.join(', ')}. Add each under ## Resumes in memory/profile.md as a short role label of a few words, e.g. "- AI Engineer Intern: memory/resume/<file>" (rename it to the role with node tools/file-doc.mjs if its name doesn't say), and save any facts that are newer than memory, following the source-of-truth rule.`);
   },
 
   // Saving a link is a small job: Memo works out what it is and files it.
@@ -1253,7 +1253,7 @@ const memory = {
         ? `/resume-file/${encodeURIComponent(basename(r.path))}?k=${TOKEN}`
         : `/${r.path.split('/').map(encodeURIComponent).join('/')}?k=${TOKEN}`;
       li.innerHTML = `<span class="doc-icon cv${r.kind === 'tailored' ? ' new' : ''}"></span>
-        <div class="meta"><b title="${esc(r.role)}">${esc(r.role)}</b><small title="${esc(r.path)}">${esc(basename(r.path))}${r.kind === 'tailored' ? ' · from a review' : ''}</small></div>
+        <div class="meta"><b title="${esc(r.role)}">${esc(r.label || r.role)}</b><small title="${esc(r.path)}">${esc(basename(r.path))}${r.kind === 'tailored' ? ' · from a review' : ''}</small></div>
         <a class="icon-btn" href="${href}" target="_blank" rel="noopener" title="Open" aria-label="Open ${esc(r.role)}">${ICONS.open}</a>`;
       if (inMemory) {
         const del = trashButton(`Remove ${r.role}`);
@@ -1409,7 +1409,7 @@ const memory = {
 function fillResumeSelects() {
   const base = appState.resumes.filter((r) => r.kind === 'base');
   const tailored = appState.resumes.filter((r) => r.kind === 'tailored');
-  const opt = (r) => `<option value="${esc(r.path)}">${esc(r.role)} · ${esc(basename(r.path))}</option>`;
+  const opt = (r) => `<option value="${esc(r.path)}" title="${esc(r.role)}">${esc(r.label || r.role)} · ${esc(basename(r.path))}</option>`;
   const groups = (base.length ? `<optgroup label="Base resumes">${base.map(opt).join('')}</optgroup>` : '')
     + (tailored.length ? `<optgroup label="Tailored by a review">${tailored.map(opt).join('')}</optgroup>` : '');
   const reviewAuto = base.length > 1 ? `Best match (Picky chooses from ${base.length})` : base.length === 1 ? 'My base resume' : 'Auto (Claude asks if none is found)';

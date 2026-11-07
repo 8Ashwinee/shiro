@@ -145,7 +145,8 @@ textarea, input[type="url"], select {
   width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px 12px;
 }
 textarea { resize: vertical; min-height: 90px; }
-.field { display: flex; flex-direction: column; gap: 5px; }
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field select { max-width: 100%; text-overflow: ellipsis; }
 .field > span { font-size: 13px; font-weight: 700; color: var(--ink-2); }
 
 .seg { display: flex; background: var(--bg-2); padding: 3px; border-radius: 12px; }

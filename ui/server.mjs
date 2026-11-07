@@ -15,7 +15,7 @@ import { runReviewPipeline, AGENTS, AGENT_EFFORTS } from './review-pipeline.mjs'
 import { createMemoryEditor } from './memory-edit.mjs';
 
 // Bump together with APP_VERSION in public/app.js, so an old server left running is spotted.
-const VERSION = '0.9.0';
+const VERSION = '0.9.1';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PUBLIC_DIR = path.join(ROOT, 'ui', 'public');
 const RUNS_DIR = path.join(ROOT, 'runs');
@@ -685,11 +685,12 @@ function listResumes() {
     const key = rel.replace(/\\/g, '/').replace(/^\.\//, '');
     if (seen.has(key) || !fs.existsSync(path.join(ROOT, key))) return;
     seen.add(key);
-    out.push({ role, path: key, kind });
+    out.push({ role, label: shortLabel(role), path: key, kind });
   };
   const profile = readText(path.join(MEMORY_DIR, 'profile.md')).replace(/<!--[\s\S]*?-->/g, '');
   const section = profile.split(/^## /m).find((s) => /^Resumes\b/.test(s)) || '';
-  for (const m of section.matchAll(/^-\s*([^:\n]+):\s*`?([^`\n]+?)`?\s*$/gm)) add(m[1].trim(), m[2].trim(), 'base');
+  // The path is the first "memory/…" or "runs/…" after a colon, so a role note that contains a colon doesn't break the line.
+  for (const m of section.matchAll(/^-\s*(.+?):\s*`?((?:memory|runs)\/[^`\n]+?)`?\s*$/gm)) add(m[1].trim(), m[2].trim(), 'base');
   for (const f of listDir(path.join(MEMORY_DIR, 'resume'))) {
     if (/\.(pdf|docx?|md|txt)$/i.test(f)) add(path.parse(f).name.replace(/[-_]+/g, ' '), `memory/resume/${f}`, 'base');
   }
@@ -697,7 +698,16 @@ function listResumes() {
   return out;
 }
 
-const MEMORY_ORDER = ['profile', 'experience', 'education', 'projects', 'certifications', 'skills', 'achievements', 'documents', 'answers', 'applications'];
+// A role line can carry long notes ("AI Engineer (used for X, v3: leads with …)"). The resume pickers show only
+// the role before any parenthesis, cut to a few words; the full line still goes to the resume-picker agent.
+function shortLabel(role) {
+  let s = String(role).replace(/\s*\(.*$/, '').replace(/\s+/g, ' ').trim() || String(role).trim();
+  if (s.length > 30 && s.indexOf(',') > 2) s = s.slice(0, s.indexOf(',')).trim();
+  if (s.length > 40) s = `${s.slice(0, 40).replace(/[\s,;:–-]+\S*$/, '')}…`;
+  return s;
+}
+
+const MEMORY_ORDER =['profile', 'experience', 'education', 'projects', 'certifications', 'skills', 'achievements', 'documents', 'answers', 'applications'];
 
 // Create any missing memory file from the blank templates. Plain file copies: free, no Claude needed.
 function ensureMemory() {

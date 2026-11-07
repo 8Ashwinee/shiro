@@ -39,7 +39,7 @@ Memory must stay tidy. Every file is identified, renamed clearly and moved into 
 | Recommendation, experience or internship-completion letter | `memory/documents/letters/` | `## Letters` |
 | Portfolio, writing sample, work sample, case study | `memory/documents/portfolio/` | `## Portfolio & samples` |
 | Cover letter | `memory/documents/cover-letters/` | `## Cover letters` |
-| A resume | `memory/resume/` (section `resumes`) | none; add a line under `## Resumes` in `profile.md` |
+| A resume | `memory/resume/` (section `resumes`), short name like `ai-engineer-intern-acme` | none; add a line `- <Role>: <path>` under `## Resumes` in `profile.md`, with `<Role>` kept to a few words (e.g. `AI Engineer Intern (Acme)`) and no notes on its contents |
 | Anything else useful for forms, or unclear | `memory/documents/other/` | `## Other files` |
 | Same document as one already filed | `memory/documents/duplicates/` | none; add `- Duplicate copy (safe to delete): <path>` to the original's entry |
 
