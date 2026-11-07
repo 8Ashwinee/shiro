@@ -1362,6 +1362,11 @@ const memory = {
     let data;
     try { [data] = await Promise.all([api('/api/memory'), refreshState()]); } catch (err) { toast(err.message); return; }
     $('#setupCallout').hidden = appState.memory;
+    // First run: open where the setup banner points, so the resume drop box is right there.
+    if (!appState.memory && !appState.resumes.length && !this.firstRunShown) {
+      this.firstRunShown = true;
+      this.showPane('resumes');
+    }
     this.files = data.files || [];
     const lists = await Promise.all(this.files.map((f) => api(`/api/memory-items?file=${encodeURIComponent(f.name)}`)
       .then((r) => [f.name, r.items]).catch(() => [f.name, []])));
