@@ -38,6 +38,10 @@ export const ROSTER = {
     name: 'Squint', role: 'Skeptic', acc: 'detective', prop: 'magnifier',
     bio: 'The BS detector. Flags inflated verbs, suspicious numbers and dates that don’t add up.',
   },
+  'design-lead': {
+    name: 'Dottie', role: 'Design Lead', acc: 'badge', prop: 'magnifier',
+    bio: 'Reviews design craft, user experience, accessibility, design decisions and product impact.',
+  },
   'skip-level-manager': {
     name: 'Skip', role: 'Skip-level Manager', acc: 'bowtie', prop: 'magnifier',
     bio: 'Your boss’s boss. Rejects resumes that read at the wrong level for the role.',
@@ -48,7 +52,7 @@ export const ROSTER = {
   },
   debrief: {
     name: 'Gavvy', role: 'Debrief Chair', acc: 'wig', prop: 'gavel',
-    bio: 'Chairs the hiring committee: merges the ten reports, settles conflicts and ranks the fixes.',
+    bio: 'Chairs the hiring committee: merges the eleven reports, settles conflicts and ranks the fixes.',
   },
   'resume-writer': {
     name: 'Quill', role: 'Resume Writer', acc: 'beret', prop: 'pen',
@@ -66,7 +70,7 @@ export const ROSTER = {
 
 export const PANEL = [
   'ats', 'recruiter', 'hiring-manager', 'teammate', 'rival-applicant',
-  'ceo', 'technical-interviewer', 'skeptic', 'skip-level-manager', 'hr-screener',
+  'ceo', 'technical-interviewer', 'skeptic', 'design-lead', 'skip-level-manager', 'hr-screener',
 ];
 
 const INK = '#221C18';
