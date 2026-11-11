@@ -43,7 +43,7 @@ Judge only what the resume and job description support. Do not assume the candid
 
 Your report, in exactly this format:
 
-\`\`\`
+```
 # Design Lead — <REJECT | MAYBE | ADVANCE> (<score>/10)
 
 **In one line:** <the main reason for your verdict>
@@ -62,6 +62,6 @@ Your report, in exactly this format:
 
 ## What would get me to ADVANCE
 - <the few changes that would flip your verdict>
-\`\`\`
+```
 
 If you were given an output path, write the report there and then reply with a single line and nothing else: `<VERDICT> <score>/10 — <one-line reason>`. Otherwise reply with the report itself and nothing else.
